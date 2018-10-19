@@ -8,6 +8,7 @@ import {
     Button} from 'react-native';
 
 import Voice from 'react-native-voice';
+import Icon from 'react-native-vector-icons/MaterialIcons'
 
 export default class ProfileScreen extends Component {
     constructor(props) {
@@ -109,90 +110,86 @@ export default class ProfileScreen extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <Text style={styles.welcome}>
-                    Welcome to React Native Voice!
-                </Text>
-                <Text style={styles.instructions}>
-                    Press the button and start speaking.
-                </Text>
-                <Text
-                    style={styles.stat}>
-                    {`Started: ${this.state.started}`}
-                </Text>
-                <Text
-                    style={styles.stat}>
-                    {`Recognized: ${this.state.recognized}`}
-                </Text>
-                <Text
-                    style={styles.stat}>
-                    {`Pitch: ${this.state.pitch}`}
-                </Text>
-                <Text
-                    style={styles.stat}>
-                    {`Error: ${this.state.error}`}
-                </Text>
-                <Text
-                    style={styles.stat}>
-                    Results
-                </Text>
-                {this.state.results.map((result, index) => {
-                    return (
-                        <Text
-                            key={`result-${index}`}
-                            style={styles.stat}>
-                            {result}
-                        </Text>
-                    )
-                })}
-                <Text
-                    style={styles.stat}>
-                    Partial Results
-                </Text>
-                {this.state.partialResults.map((result, index) => {
-                    return (
-                        <Text
-                            key={`partial-result-${index}`}
-                            style={styles.stat}>
-                            {result}
-                        </Text>
-                    )
-                })}
-                <Text
-                    style={styles.stat}>
-                    {`End: ${this.state.end}`}
-                </Text>
-                    <Button
-                        style={styles.button}
-                        title="Start"
-                        onPress={this._startRecognizing.bind(this)}
-                    />
-                <TouchableHighlight onPress={this._stopRecognizing.bind(this)}>
-                    <Text
-                        style={styles.action}>
-                        Stop Recognizing
+                <View style={styles.body}>
+                    <TouchableHighlight
+                        style={styles.mic}
+                        onPress={this._startRecognizing.bind(this)}>
+                        <Icon name='keyboard-voice' size={70}>
+                        </Icon>
+                    </TouchableHighlight>
+                    <Text style={styles.welcome}>
+                       Press button to start recording notes
                     </Text>
-                </TouchableHighlight>
-                <TouchableHighlight onPress={this._cancelRecognizing.bind(this)}>
-                    <Text
-                        style={styles.action}>
-                        Cancel
+                    <TouchableHighlight
+                        style={styles.mic}
+                        onPress={this._stopRecognizing.bind(this)}>
+                        <Icon name='done' size={70}>
+                        </Icon>
+                    </TouchableHighlight>
+                    <Text style={styles.instructions}>
+                        Press done after you're done.
                     </Text>
-                </TouchableHighlight>
+                    <View style={styles.results}>
+                        <Text
+                            style={styles.stat}>
+                            Partial Results
+                        </Text>
+                        {this.state.partialResults.map((result, index) => {
+                            return (
+                                <Text
+                                    key={`partial-result-${index}`}
+                                    style={styles.stat}>
+                                    {result}
+                                </Text>
+                            )
+                        })}
+                    </View>
+                </View>
             </View>
         );
     }
 }
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#F5FCFF',
+    },
+    body:{
+          height:200,
+          alignItems:'center',
+        marginTop:40,
+    },
+    mic:{
+        marginTop:20,
+    },
+    insights:{
+        backgroundColor:'#E5E5E5',
+        height:50,
+        width:250,
+        elevation:4,
+        marginTop:20,
+        justifyContent:'space-between',
+        flexDirection:'row',
+        alignItems:'center',
+    },
+    results:{
+        backgroundColor:'#E5E5E5',
+        height:50,
+        width:250,
+        elevation:4,
+        marginTop:20,
+        alignItems:'center',
+    },
+    stat: {
+        textAlign: 'center',
+        color: '#B0171F',
+        marginBottom: 1,
+        marginLeft:2,
+    },
     button: {
         width: 50,
         height: 50,
-    },
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#F5FCFF',
     },
     welcome: {
         fontSize: 20,
@@ -210,11 +207,7 @@ const styles = StyleSheet.create({
         color: '#333333',
         marginBottom: 5,
     },
-    stat: {
-        textAlign: 'center',
-        color: '#B0171F',
-        marginBottom: 1,
-    },
+
 
 });
 

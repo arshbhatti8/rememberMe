@@ -59,12 +59,15 @@ export default class HomeScreen extends Component {
                            <Icon name='instagram' size={30}/>
                        </TouchableOpacity>
                    </View>
-                    <View style={styles.qr}>
-                        <QRCode
-                            value={this.state.text}
-                            size={200}
-                            bgColor='black'
-                            fgColor='white'/>
+                    <View style={styles.qrContainer}>
+                        <View  style={styles.qr}>
+                            <QRCode
+                                value={this.state.text}
+                                size={200}
+                                bgColor='black'
+                                fgColor='white'
+                            />
+                        </View>
                         <Text>State:{this.state.text}</Text>
                     </View>
                 </View>
@@ -97,12 +100,15 @@ const styles = StyleSheet.create({
     body:{
         flex:1
     },
-    qr:{
-        marginTop:10,
+    qrContainer:{
+        marginTop:30,
         height:300,
         backgroundColor:'white',
         elevation:10,
         alignItems:'center',
+    },
+    qr:{
+      marginTop:30,
     },
     tabBar:{
         backgroundColor:'white',

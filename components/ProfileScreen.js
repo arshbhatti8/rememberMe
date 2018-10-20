@@ -5,8 +5,8 @@ import {
     Text,
     View,
     TouchableHighlight,
+    Image,
     Button} from 'react-native';
-
 import Voice from 'react-native-voice';
 import Icon from 'react-native-vector-icons/MaterialIcons'
 
@@ -108,9 +108,20 @@ export default class ProfileScreen extends Component {
 
 
     render() {
+
+        const {params} = this.props.navigation.state;
+        const name = params ? params.name: null;
+        let image;
+        if(name=='obama'){
+            image = <Image  style={styles.profileImage} source={require('../assets/images/obama.jpg')}/>
+        }
+        else{
+            image = <Image style={styles.profileImage} source={require('../assets/images/sanders.jpg')}/>
+        }
         return (
             <View style={styles.container}>
                 <View style={styles.body}>
+                    {image}
                     <TouchableHighlight
                         style={styles.mic}
                         onPress={this._startRecognizing.bind(this)}>
@@ -132,7 +143,7 @@ export default class ProfileScreen extends Component {
                     <View style={styles.results}>
                         <Text
                             style={styles.stat}>
-                            Partial Results
+                            Transcript:
                         </Text>
                         {this.state.partialResults.map((result, index) => {
                             return (
@@ -180,6 +191,10 @@ const styles = StyleSheet.create({
         elevation:4,
         marginTop:20,
         alignItems:'center',
+    },
+    profileImage:{
+        width:70,
+        height:100
     },
     stat: {
         textAlign: 'center',

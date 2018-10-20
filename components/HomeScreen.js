@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, Text, View, TouchableOpacity, TextInput} from 'react-native';
+import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import QRCode from 'react-native-qrcode';
 import Icon from 'react-native-vector-icons/AntDesign';
 import Micon from 'react-native-vector-icons/MaterialIcons';
@@ -15,25 +15,25 @@ export default class HomeScreen extends Component {
 
     generateLinkedin(){
         this.setState({
-            text:'www.linkedin.com'
+            text:'www.linkedin.com/in/arshbhatti'
         });
     }
 
     generateEmail(){
         this.setState({
-            text:'www.gmail.com'
+            text:'www.google.com/arshbhatti8'
         });
     }
 
     generateFacebook(){
         this.setState({
-            text:'www.facebook.com'
+            text:'www.facebook.com/arshbhatti8'
         });
     }
 
     generateInstagram(){
         this.setState({
-            text:'www.instagram.com'
+            text:'www.instagram.com/inquilabidaur   '
         });
     }
 
@@ -78,6 +78,13 @@ export default class HomeScreen extends Component {
                             <Micon name='account-circle' size={25}/>
                             <Text>Profile</Text>
                         </TouchableOpacity>
+                        <TouchableOpacity
+                            style={styles.tabItem}
+                            onPress={()=>this.props.navigation.navigate('Contacts')}>
+                            <Micon name='person' size={25}/>
+                            <Text>Contacts</Text>
+                        </TouchableOpacity>
+
                 </View>
             </View>
         );

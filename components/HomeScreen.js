@@ -84,6 +84,12 @@ export default class HomeScreen extends Component {
                             <Micon name='person' size={25}/>
                             <Text>Contacts</Text>
                         </TouchableOpacity>
+                        <TouchableOpacity
+                            style={styles.tabItem}
+                            onPress={()=>this.props.navigation.navigate('Camera')}>
+                            <Micon name='photo-camera' size={25}/>
+                            <Text>Scan QR</Text>
+                        </TouchableOpacity>
 
                 </View>
             </View>

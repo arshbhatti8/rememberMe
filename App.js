@@ -1,19 +1,19 @@
 import React, {Component} from 'react';
 import {AppRegistry, StyleSheet, View} from 'react-native';
-import AppNavigator from './AppNavigator';
+import AppNavigator from './NewAppNavigator';
 
 export default class App extends Component {
   render() {
     return (
-        <AppNavigator style={styles.container}/>
+        <View style={styles.container}>
+            <AppNavigator/>
+        </View>
     );
   }
 }
-
-const styles= StyleSheet.create({
+const styles = StyleSheet.create({
    container:{
-     flex:1
+       flex:1,
    }
 });
-
 AppRegistry.registerComponent('App', () => App);

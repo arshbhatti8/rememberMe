@@ -1,18 +1,21 @@
 import React, {Component} from 'react';
 import {
-    AppRegistry,
-    StyleSheet,
+    TextInput,
     Text,
     View,
     TouchableHighlight,
     Image,
-    Button} from 'react-native';
+    Button,
+    StyleSheet,
+    AppRegistry
+    } from 'react-native';
 import Voice from 'react-native-voice';
 import Icon from 'react-native-vector-icons/MaterialIcons'
 
+
 export default class ProfileScreen extends Component {
-    constructor(props) {
-        super(props);
+    constructor() {
+        super();
         this.state = {
             recognized: '',
             pitch: '',
@@ -21,7 +24,9 @@ export default class ProfileScreen extends Component {
             started: '',
             results: [],
             partialResults: [],
+            link:"http://",
         };
+
         Voice.onSpeechStart = this.onSpeechStart.bind(this);
         Voice.onSpeechRecognized = this.onSpeechRecognized.bind(this);
         Voice.onSpeechEnd = this.onSpeechEnd.bind(this);
@@ -29,6 +34,15 @@ export default class ProfileScreen extends Component {
         Voice.onSpeechResults = this.onSpeechResults.bind(this);
         Voice.onSpeechPartialResults = this.onSpeechPartialResults.bind(this);
         Voice.onSpeechVolumeChanged = this.onSpeechVolumeChanged.bind(this);
+    }
+
+    componentWillReceiveProps(nextProps){
+        const url= nextProps.navigation.state.params.url;
+        console.log(url);
+        this.setState({
+            ...this.state,
+            link:url
+        })
     }
 
     onSpeechStart(e) {
@@ -122,6 +136,13 @@ export default class ProfileScreen extends Component {
             <View style={styles.container}>
                 <View style={styles.body}>
                     {image}
+                    <Text style={styles.link}>
+                        Link:
+                    </Text>
+                    <TextInput value={this.state.link}/>
+                    <Button
+                        title="Press to scan QR"
+                        onPress={()=>this.props.navigation.navigate('Camera')}/>
                     <TouchableHighlight
                         style={styles.mic}
                         onPress={this._startRecognizing.bind(this)}>
@@ -167,9 +188,12 @@ const styles = StyleSheet.create({
         backgroundColor: '#F5FCFF',
     },
     body:{
-          height:200,
-          alignItems:'center',
+        height:200,
+        alignItems:'center',
         marginTop:40,
+    },
+    link:{
+
     },
     mic:{
         marginTop:20,

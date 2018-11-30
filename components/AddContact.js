@@ -1,18 +1,38 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Text, TextInput} from 'react-native';
+import {StyleSheet, View, TextInput, Button} from 'react-native';
 import {Avatar} from 'react-native-elements';
+import { connect } from 'react-redux';
 
-export default class AddContact extends Component {
+import {addContact} from "../actions/index";
+
+
+const mapDispatchToProps = dispatch => {
+    return {
+        addContact: user => dispatch(addContact(user))
+    };
+};
+
+class AddContact extends Component {
+
     constructor(){
         super();
         this.state={
-            firstName:"First Name",
-            lastName:"Last Name",
-            phoneNumber:"Phone Number",
-            emailAddress:"Email Address",
-            company:"Company",
+            user: {
+                firstName: "First Name",
+                lastName: "Last Name",
+                phoneNumber: "Phone Number",
+                emailAddress: "Email Address",
+                company: "Company",
+            }
         }
     }
+
+    submitContact=(event)=>{
+        event.preventDefault();
+        const {user} = this.state;
+        this.props.addContact(user);
+    };
+
 
     render() {
         return (
@@ -22,36 +42,37 @@ export default class AddContact extends Component {
                         xlarge
                         raised
                         rounded
-                        icon={{name:'person-add', color:'#3e86f9'}}
+                        icon={{name: 'person-add', color: '#3e86f9'}}
                     />
                 </View>
                 <View style={styles.inputContainer}>
                     <View style={styles.borderBottom}>
                         <TextInput
-                            value={this.state.firstName}
-                            onChangeText={(text)=>this.setState({firstName:text})}/>
+                            value={this.state.user.firstName}
+                            onChangeText={(text) => this.setState({user:{...this.state.user,firstName:text}})}/>
                     </View>
                     <View style={styles.borderBottom}>
                         <TextInput
-                            value={this.state.lastName}
-                            onChangeText={(text)=>this.setState({lastName:text})}/>
+                            value={this.state.user.lastName}
+                            onChangeText={(text) => this.setState({user:{...this.state.user,lastName: text}})}/>
                     </View>
                     <View style={styles.borderBottom}>
                         <TextInput
-                            value={this.state.phoneNumber}
-                            onChangeText={(text)=>this.setState({phoneNumber:text})}/>
+                            value={this.state.user.phoneNumber}
+                            onChangeText={(text) => this.setState({user:{...this.state.user,phoneNumber: text}})}/>
                     </View>
                     <View style={styles.borderBottom}>
                         <TextInput
-                            value={this.state.emailAddress}
-                            onChangeText={(text)=>this.setState({emailAddress:text})}/>
+                            value={this.state.user.emailAddress}
+                            onChangeText={(text) => this.setState({user:{...this.state.user,emailAddress: text}})}/>
                     </View>
                     <View style={styles.borderBottom}>
                         <TextInput
-                            value={this.state.company}
-                            onChangeText={(text)=>this.setState({company:text})}/>
+                            value={this.state.user.company}
+                            onChangeText={(text) => this.setState({user:{...this.state.user,company: text}})}/>
                     </View>
                 </View>
+                <Button title='Submit' style={styles.submitButton} onPress={this.submitContact}/>
             </View>
         )
     }
@@ -74,5 +95,11 @@ const styles = StyleSheet.create({
     },
     borderBottom: {
         borderBottomWidth: 1
+    },
+    submitButton:{
+        marginTop:5,
     }
 });
+
+const ContactPage = connect(null, mapDispatchToProps)(AddContact);
+export default ContactPage;

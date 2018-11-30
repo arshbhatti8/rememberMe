@@ -2,6 +2,7 @@ import React from 'react';
 import {createBottomTabNavigator} from 'react-navigation';
 import Micon from 'react-native-vector-icons/MaterialIcons';
 
+import NewList from './components/NewList';
 import ContactsScreen from './components/NewHomeScreen';
 import SharingScreen from './components/HomeScreen';
 import AddContact from './components/AddContact';
@@ -37,6 +38,18 @@ const NewAppNavigator = createBottomTabNavigator({
             tabBarIcon: ({tintColor}) => (
                 <Micon
                     name='person-add'
+                    size={24}
+                    color={tintColor}
+                />
+            )
+        }
+    },
+    NewList:{
+        screen:NewList,
+        navigationOptions: {
+            tabBarIcon: ({tintColor}) => (
+                <Micon
+                    name='access-point'
                     size={24}
                     color={tintColor}
                 />

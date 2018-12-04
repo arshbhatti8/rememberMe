@@ -1,13 +1,27 @@
 import React from 'react';
-import {createBottomTabNavigator} from 'react-navigation';
+import {createBottomTabNavigator, createStackNavigator, StackNavigator} from 'react-navigation';
 import Micon from 'react-native-vector-icons/MaterialIcons';
 
 import NewList from './components/NewList';
 import ContactsScreen from './components/NewHomeScreen';
 import SharingScreen from './components/HomeScreen';
 import AddContact from './components/AddContact';
+import UserDetail from './components/UserDetail';
 
-const NewAppNavigator = createBottomTabNavigator({
+export const HomeStack = StackNavigator({
+    Home:{
+        screen:NewList,
+        navigationOptions:{
+            title:'Home',
+            header:null
+        }
+    },
+    UserDetail:{
+        screen:UserDetail
+    }
+});
+
+export const BottomTabNavigator = createBottomTabNavigator({
     Contacts: {
         screen: ContactsScreen,
         navigationOptions: {
@@ -32,8 +46,8 @@ const NewAppNavigator = createBottomTabNavigator({
             )
         }
     },
-    AddContact:{
-        screen:AddContact,
+    AddContact: {
+        screen: AddContact,
         navigationOptions: {
             tabBarIcon: ({tintColor}) => (
                 <Micon
@@ -44,12 +58,12 @@ const NewAppNavigator = createBottomTabNavigator({
             )
         }
     },
-    NewList:{
-        screen:NewList,
+    Home: {
+        screen: HomeStack,
         navigationOptions: {
             tabBarIcon: ({tintColor}) => (
                 <Micon
-                    name='access-point'
+                    name='dialer-sip'
                     size={24}
                     color={tintColor}
                 />
@@ -58,4 +72,12 @@ const NewAppNavigator = createBottomTabNavigator({
     }
 });
 
-export default NewAppNavigator;
+export const Root = createStackNavigator({
+        Tabs: {screen: BottomTabNavigator},
+        Profile: {screen: StackNavigator}
+    },
+    {
+        mode: 'modal',
+        headerMode: 'none',
+    });
+

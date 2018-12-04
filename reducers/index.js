@@ -1,22 +1,15 @@
 import {ADD_CONTACT} from "../constants/action-types";
+import {insertNewUser} from "../database/schema";
 
-const initialState = {
-    isLoggedIn: false,
-    user: {
-        firstName: "First Name",
-        lastName: "Last Name",
-        phoneNumber: "Phone Number",
-        emailAddress: "Email Address",
-        company: "Company",
-    }
 
-};
-
-const rootReducer = (state = initialState, action) => {
+const rootReducer = (state, action) => {
     switch (action.type) {
         case
         ADD_CONTACT:
-            return {...state, user: action.payload};
+            insertNewUser(action.payload).then().catch((error)=>{
+                alert('Error occured while adding: '+error);
+            });
+        return {...state,users:action.payload};
             break;
         default:
             return state;

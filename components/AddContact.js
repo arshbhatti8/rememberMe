@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {StyleSheet, View, TextInput, Button} from 'react-native';
 import {Avatar} from 'react-native-elements';
 import { connect } from 'react-redux';
+import uuidv4 from 'uuid4';
 
 import {addContact} from "../actions/index";
 
@@ -18,6 +19,7 @@ class AddContact extends Component {
         super();
         this.state={
             user: {
+                id:uuidv4(),
                 firstName: "First Name",
                 lastName: "Last Name",
                 phoneNumber: "Phone Number",

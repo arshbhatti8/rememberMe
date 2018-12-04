@@ -3,14 +3,14 @@ import {AppRegistry, StyleSheet, View} from 'react-native';
 import {Provider} from 'react-redux';
 import store from './store/index';
 
-import AppNavigator from './NewAppNavigator';
+import {Root,BottomTabNavigator} from './AppNavigator';
 
 export default class App extends Component {
     render() {
         return (
             <View style={styles.container}>
                 <Provider store={store}>
-                    <AppNavigator/>
+                    <Root/>
                 </Provider>
             </View>
         );

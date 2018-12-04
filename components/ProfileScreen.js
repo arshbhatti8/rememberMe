@@ -13,7 +13,7 @@ import Voice from 'react-native-voice';
 import Icon from 'react-native-vector-icons/MaterialIcons'
 
 
-export default class ProfileScreen extends Component {
+export default class UserDetailProfileScreen extends Component {
     constructor() {
         super();
         this.state = {

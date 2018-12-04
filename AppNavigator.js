@@ -5,7 +5,7 @@ import Micon from 'react-native-vector-icons/MaterialIcons';
 import NewList from './components/NewList';
 import ContactsScreen from './components/NewHomeScreen';
 import SharingScreen from './components/HomeScreen';
-import AddContact from './components/AddContact';
+import AddContact from './components/UserDetail';
 import UserDetail from './components/UserDetail';
 
 export const HomeStack = StackNavigator({

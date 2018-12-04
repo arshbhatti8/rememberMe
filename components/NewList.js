@@ -72,7 +72,7 @@ class NewList extends Component {
                             <TouchableOpacity onPress={() => this.navigateToDetails(item)}>
                                 <ListItem
                                     roundAvatar
-                                    title={`${item.firstName} ${item.lastName}`}
+                                    title={`${item.name}`}
                                     subtitle={item.company}
                                     avatar={{uri: 'https://randomuser.me/api/portraits/men/65.jpg'}}
                                     containerStyle={{borderBottomWidth: 0}}

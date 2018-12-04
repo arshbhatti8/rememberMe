@@ -7,20 +7,32 @@ export const UserSchema = {
     primaryKey: 'id',
     properties: {
         id: 'string',
-        firstName: {type: 'string', indexed: true},
-        lastName: {type: 'string', indexed: false},
+        name: {type: 'string', indexed: false},
         phoneNumber: {type: 'string', indexed: false},
         emailAddress: {type: 'string', indexed: true},
         company: {type: 'string', indexed: true},
+        linkedin: {type: 'string', indexed: false},
+        instagram: {type: 'string', indexed: false},
+        facebook: {type: 'string', indexed: false},
+        notes: {type: 'string', indexed: false},
     }
 };
 
 
 const databaseOptions = {
-    path: 'user.realm',
+    path: 'userList.realm',
     schema: [UserSchema],
-    schemaVersion: 2,
+    schemaVersion: 4,
 };
+
+export const queryAllUsers = () => new Promise((resolve, reject) => {
+    Realm.open(databaseOptions).then(realm => {
+        let allUsers = realm.objects(USER_SCHEMA);
+        resolve(allUsers);
+    }).catch((error) => {
+        reject(error);
+    }).then();
+});
 
 export const insertNewUser = newUserList => new Promise((resolve, reject) => {
     Realm.open(databaseOptions).then(realm => {
@@ -31,13 +43,15 @@ export const insertNewUser = newUserList => new Promise((resolve, reject) => {
     }).catch((error) => reject(error));
 });
 
-export const queryAllUsers = () => new Promise((resolve, reject) => {
-    Realm.open(databaseOptions).then(realm => {
-        let allUsers = realm.objects(USER_SCHEMA);
-        resolve(allUsers);
-    }).catch((error) => {
-        reject(error);
-    }).then();
+export const editUserName = user => new Promise((reolve,reject)=>{
+    Realm.open(databaseOptions).then(realm=>{
+        realm.write(()=>{
+           let updatingUser = realm.objectForPrimaryKey(USER_SCHEMA,user.id);
+
+        });
+    })
 });
+
+
 
 export default new Realm(databaseOptions);

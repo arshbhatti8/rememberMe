@@ -1,4 +1,4 @@
-import {ADD_CONTACT} from "../constants/action-types";
+import {ADD_CONTACT, EDIT_CONTACT} from "../constants/action-types";
 import {insertNewUser} from "../database/schema";
 
 
@@ -11,6 +11,9 @@ const rootReducer = (state, action) => {
             });
         return {...state,users:action.payload};
             break;
+        case
+        EDIT_CONTACT:
+
         default:
             return state;
     }

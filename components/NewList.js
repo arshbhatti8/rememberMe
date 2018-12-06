@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {View, StyleSheet, FlatList, ActivityIndicator, TouchableOpacity} from 'react-native';
 import {ListItem, SearchBar} from 'react-native-elements';
 import {connect} from 'react-redux';
+import realm from '../database/schema';
 
 import {queryAllUsers} from "../database/schema";
 
@@ -15,18 +16,25 @@ class NewList extends Component {
         super();
         this.state = {
             users: []
-        }
+        };
+        this.getData();
+        realm.addListener('change',()=>{
+            this.getData();
+        })
     }
 
-    componentDidMount() {
+    getData = () => {
         queryAllUsers().then(data => {
-                this.setState({
-                    users: data
-                })
-            }
-        ).catch((error) => {
+            this.setState({
+                users: data
+            })
+        }).catch((error) => {
             alert('Error occured while adding' + error);
         });
+    };
+
+    componentDidMount() {
+        this.getData();
     }
 
     renderSeparator = () => {

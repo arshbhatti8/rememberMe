@@ -1,127 +1,133 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, TextInput, Button, ScrollView} from 'react-native';
-import {Avatar, Tile, List, ListItem} from 'react-native-elements';
+import {StyleSheet, ScrollView} from 'react-native';
+import {Tile, FormLabel, FormInput, Button} from 'react-native-elements';
 import {connect} from 'react-redux';
-import uuidv4 from 'uuid4';
 
-import {addContact} from "../actions/index";
-
+import {editContact} from "../actions/index";
 
 const mapDispatchToProps = dispatch => {
     return {
-        addContact: user => dispatch(addContact(user))
+        editContact: user => dispatch(editContact(user))
     };
 };
 
-class AddContact extends Component {
 
-    constructor() {
-        super();
-        this.props!==undefined ? this.state = {
-            user: this.props.navigation.state.params
-        } : this.state = {
+class UserDetail extends Component {
+
+    constructor(props) {
+        super(props);
+        let {id,name,phoneNumber,emailAddress,company,linkedin,
+            instagram,facebook,notes}=this.props.navigation.state.params;
+        this.state = {
             user: {
-                id: uuidv4(),
-                name: 'Full Name',
-                phoneNumber: "Phone Number",
-                emailAddress: "Email Address",
-                company: "Company",
-                linkedin: 'Linkedin',
-                instagram: 'instagram',
-                facebook: 'facebook',
-                notes:'notes'
+                id: id,
+                name: name,
+                phoneNumber: phoneNumber,
+                emailAddress: emailAddress,
+                company: company,
+                linkedin: linkedin,
+                instagram: instagram,
+                facebook: facebook,
+                notes: notes,
             }
         }
     }
 
-    componentWillReceiveProps(nextProps){
-        const user= nextProps.navigation.state.params;
-        this.setState({
-            ...this.state,
-            user:user
-        })
-    }
-
-    submitContact = (event) => {
+    submitContact = (event)=>{
         event.preventDefault();
         const {user} = this.state;
-        this.props.addContact(user);
+        console.log(user);
+        this.props.editContact(user);
     };
 
     render() {
         return (
-            <ScrollView>
+            <ScrollView contentContainerStyle={styles.contentContainer}>
                 <Tile
                     imageSrc={{uri: 'https://randomuser.me/api/portraits/men/65.jpg'}}
                     featured
                     title={`${this.state.user.name.toUpperCase()}`}
-                    caption={this.state.user.emailAddress}
-                >
+                    caption={`${this.state.user.emailAddress}`}>
                 </Tile>
-                <List>
-                    <ListItem
-                        title="Email"
-                        rightTitle={this.state.user.emailAddress}
-                        hideChevron/>
-
-                    <ListItem
-                        title="Phone"
-                        rightTitle={this.state.user.phoneNumber}
-                        hideChevron
-                    />
-                </List>
-                <List>
-                    <ListItem
-                        title="Company"
-                        rightTitle={this.state.user.company}
-                        hideChevron
-                    />
-                </List>
-                <List>
-                    <ListItem
-                        title="LinkedIn"
-                        rightTitle={this.state.user.linkedin}
-                        hideChevron
-                    />
-                    <ListItem
-                        title="Instagram"
-                        rightTitle={this.state.user.instagram}
-                        hideChevron
-                    />
-                    <ListItem
-                        title="Facebook"
-                        rightTitle={this.state.user.facebook}
-                        hideChevron
-                    />
-                </List>
+                <FormLabel labelStyle={styles.header}>Name</FormLabel>
+                <FormInput
+                    value={this.state.user.name}
+                    onChangeText={(value)=>this.setState({user:{...this.state.user,name:value}})}
+                    containerStyle={styles.formInput}
+                    inputStyle={styles.inputText}/>
+                <FormLabel labelStyle={styles.header}>Phone Number</FormLabel>
+                <FormInput
+                    value={this.state.user.phoneNumber}
+                    onChangeText={(value)=>this.setState({user:{...this.state.user,phoneNumber:value}})}
+                    containerStyle={styles.formInput}
+                    inputStyle={styles.inputText}/>
+                <FormLabel labelStyle={styles.header}>Email Address</FormLabel>
+                <FormInput
+                    value={this.state.user.emailAddress}
+                    onChangeText={(value)=>this.setState({user:{...this.state.user,emailAddress:value}})}
+                    containerStyle={styles.formInput}
+                    inputStyle={styles.inputText}/>
+                <FormLabel labelStyle={styles.header}>Company</FormLabel>
+                <FormInput
+                    value={this.state.user.company}
+                    onChangeText={(value)=>this.setState({user:{...this.state.user,company:value}})}
+                    containerStyle={styles.formInput}
+                    inputStyle={styles.inputText}/>
+                <FormLabel labelStyle={styles.header}>Linkedin</FormLabel>
+                <FormInput
+                    value={this.state.user.linkedin}
+                    onChangeText={(value)=>this.setState({user:{...this.state.user,linkedin:value}})}
+                    containerStyle={styles.formInput}
+                    inputStyle={styles.inputText}/>
+                <FormLabel labelStyle={styles.header}>Instagram</FormLabel>
+                <FormInput
+                    value={this.state.user.instagram}
+                    onChangeText={(value)=>this.setState({user:{...this.state.user,instagram:value}})}
+                    containerStyle={styles.formInput}
+                    inputStyle={styles.inputText}/>
+                <FormLabel labelStyle={styles.header}>Facebook</FormLabel>
+                <FormInput
+                    value={this.state.user.facebook}
+                    onChangeText={(value)=>this.setState({user:{...this.state.user,facebook:value}})}
+                    containerStyle={styles.formInput}
+                    inputStyle={styles.inputText}/>
+                <FormLabel labelStyle={styles.header}>Notes</FormLabel>
+                <FormInput
+                    value={this.state.user.notes}
+                    onChangeText={(value)=>this.setState({user:{...this.state.user,notes:value}})}
+                    containerStyle={styles.formInput}
+                    inputStyle={styles.inputText}/>
+                <Button
+                    onPress={this.submitContact}
+                    containerViewStyle={styles.submitButton}
+                    raised
+                    title='Submit'/>
             </ScrollView>
-
         )
     }
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
+    header:{
+        fontSize:17,
+        color:'#fff'
     },
-    image: {
-        flex: 3,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: 5,
+    formInput:{
+        borderBottomWidth:1,
+        borderBottomColor:'#199187',
     },
-    inputContainer: {
-        flex: 7,
-        justifyContent: 'center',
-        alignItems: 'center',
+    inputText:{
+        color:'#fff',
+        fontSize:16
     },
-    borderBottom: {
-        borderBottomWidth: 1
+    contentContainer:{
+        backgroundColor:'#36485f',
+        paddingBottom:20,
     },
     submitButton: {
-        marginTop: 5,
-    }
+        marginTop: 20,
+    },
 });
 
-const ContactPage = connect(null, mapDispatchToProps)(AddContact);
-export default ContactPage;
+const DetailUser = connect(null,mapDispatchToProps)(UserDetail);
+export default DetailUser;

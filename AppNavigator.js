@@ -1,14 +1,13 @@
 import React from 'react';
-import {createBottomTabNavigator, createStackNavigator, StackNavigator} from 'react-navigation';
+import {createBottomTabNavigator, createStackNavigator} from 'react-navigation';
 import Micon from 'react-native-vector-icons/MaterialIcons';
 
 import NewList from './components/NewList';
-import ContactsScreen from './components/NewHomeScreen';
 import SharingScreen from './components/HomeScreen';
-import AddContact from './components/UserDetail';
+import AddContact from './components/Form';
 import UserDetail from './components/UserDetail';
 
-export const HomeStack = StackNavigator({
+export const HomeStack = createStackNavigator({
     Home:{
         screen:NewList,
         navigationOptions:{
@@ -22,18 +21,6 @@ export const HomeStack = StackNavigator({
 });
 
 export const BottomTabNavigator = createBottomTabNavigator({
-    Contacts: {
-        screen: ContactsScreen,
-        navigationOptions: {
-            tabBarIcon: ({tintColor}) => (
-                <Micon
-                    name='contacts'
-                    size={24}
-                    color={tintColor}
-                />
-            )
-        }
-    },
     Share: {
         screen: SharingScreen,
         navigationOptions: {
@@ -74,7 +61,7 @@ export const BottomTabNavigator = createBottomTabNavigator({
 
 export const Root = createStackNavigator({
         Tabs: {screen: BottomTabNavigator},
-        Profile: {screen: StackNavigator}
+        Profile: {screen: HomeStack}
     },
     {
         mode: 'modal',

@@ -43,13 +43,31 @@ export const insertNewUser = newUserList => new Promise((resolve, reject) => {
     }).catch((error) => reject(error));
 });
 
-export const editUserName = user => new Promise((reolve,reject)=>{
+export const editUser = user => new Promise((resolve,reject)=>{
     Realm.open(databaseOptions).then(realm=>{
         realm.write(()=>{
            let updatingUser = realm.objectForPrimaryKey(USER_SCHEMA,user.id);
-
+           updatingUser.name=user.name;
+            updatingUser.phoneNumber=user.phoneNumber;
+            updatingUser.emailAddress=user.emailAddress;
+            updatingUser.company=user.company;
+            updatingUser.linkedin=user.linkedin;
+            updatingUser.instagram=user.instagram;
+            updatingUser.facebook= user.facebook;
+            updatingUser.notes= user.notes;
+           resolve();
         });
-    })
+    }).catch(error=>reject(error));
+});
+
+export const deleteUser = newUserList => new Promise((resolve, reject) => {
+    Realm.open(databaseOptions).then(realm => {
+        realm.write(()=>{
+            let deletingUser = realm.objectForPrimaryKey(USER_SCHEMA,user.id);
+            realm.delete(deletingUser);
+            resolve();
+        });
+    }).catch((error) => reject(error));
 });
 
 

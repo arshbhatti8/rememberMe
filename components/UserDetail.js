@@ -36,7 +36,6 @@ class UserDetail extends Component {
     submitContact = (event)=>{
         event.preventDefault();
         const {user} = this.state;
-        console.log(user);
         this.props.editContact(user);
     };
 

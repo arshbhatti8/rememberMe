@@ -19,30 +19,16 @@ class RenderForm extends Component  {
         this.state = {
             user: {
                 id: uuidv4(),
-                name: 'Name',
-                phoneNumber: 'Phone Number',
-                emailAddress: 'Email Address',
-                company: 'Company',
-                linkedin: 'Linkedin',
-                instagram: 'Instagram',
-                facebook: 'Facebook',
-                notes: 'Notes',
+                name: '',
+                phoneNumber: '',
+                emailAddress: '',
+                company: '',
+                linkedin: '',
+                instagram: '',
+                facebook: '',
+                notes: '',
             }
         }
-    }
-
-    handleInputChange=(text,item)=>{
-      this.stateChange(text,item);
-    };
-
-    componentWillReceiveProps(nextProps) {
-        console.log('Next Props: ');
-        console.log(nextProps);
-        const user = nextProps.navigation.state.params;
-        this.setState({
-            ...this.state,
-            user: user
-        })
     }
 
     camelize(str){
@@ -63,7 +49,27 @@ class RenderForm extends Component  {
     submitContact = (event) => {
         event.preventDefault();
         const {user} = this.state;
-        this.props.addContact(user);
+        if(this.state.user.name!==""&&this.state.user.phoneNumber!==""){
+            this.props.addContact(user);
+            this.setState({
+                user: {
+                    id: uuidv4(),
+                    name: '',
+                    phoneNumber: '',
+                    emailAddress: '',
+                    company: '',
+                    linkedin: '',
+                    instagram: '',
+                    facebook: '',
+                    notes: '',
+                }
+            });
+            alert('User added successfully');
+        }
+        else{
+            alert('Name and Phone Number are mandatory fields');
+        }
+
     };
 
     render(){
@@ -76,7 +82,7 @@ class RenderForm extends Component  {
                         <FormItem
                             item={item}
                             styles={styles}
-                            handleInputChange={this.handleInputChange}/>
+                            handleInputChange={this.stateChange}/>
                     </View>
                 ))}
                 <Button

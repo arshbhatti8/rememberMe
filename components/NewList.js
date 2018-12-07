@@ -1,15 +1,9 @@
 import React, {Component} from 'react';
 import {View, StyleSheet, FlatList, ActivityIndicator, TouchableOpacity} from 'react-native';
 import {ListItem, SearchBar} from 'react-native-elements';
-import {connect} from 'react-redux';
-import realm from '../database/schema';
+import {realmUser} from '../database/schema';
 
 import {queryAllUsers} from "../database/schema";
-
-const mapStateToProps = state => {
-    return {users: state.users}
-};
-
 
 class NewList extends Component {
     constructor() {
@@ -18,7 +12,7 @@ class NewList extends Component {
             users: []
         };
         this.getData();
-        realm.addListener('change',()=>{
+        realmUser.addListener('change',()=>{
             this.getData();
         })
     }
@@ -113,5 +107,4 @@ const styles = StyleSheet.create({
 });
 
 
-const ContactsList = connect(mapStateToProps)(NewList);
-export default ContactsList;
+export default NewList;

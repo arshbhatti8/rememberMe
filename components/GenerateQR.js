@@ -7,14 +7,16 @@ import {CheckBox} from 'react-native-elements';
 export default class HomeScreen extends Component {
     constructor(props){
         super(props);
-        const {linkedin,instagram,facebook,emailAddress}=this.props.navigation.state.params;
+        const {name,company,linkedin,instagram,facebook,emailAddress}=this.props.navigation.state.params;
         this.state = {
             qr:{
                 text: '',
+                name:name,
                 linkedin:linkedin,
                 instagram:instagram,
                 facebook:facebook,
                 emailAddress:emailAddress,
+                nameFlag:false,
                 linkedinFlag:false,
                 instagramFlag:false,
                 facebookFlag:false,
@@ -24,6 +26,36 @@ export default class HomeScreen extends Component {
         };
     }
 
+    addName=(event)=> {
+        event.preventDefault();
+        const regex = /(,[A-Z])\w+\s*\w*/g;
+        if (!this.state.qr.nameFlag) {
+            this.setState({
+                qr:
+                    {
+                        ...this.state.qr,
+                        nameFlag: !this.state.qr.nameFlag,
+                        text: `${this.state.qr.text},${this.state.qr.name}`
+                    }
+            })
+        }
+        else {
+            let text = '';
+            this.state.qr.text===''?
+                text = this.state.qr.text.replace
+                (regex, ',') :
+                text = this.state.qr.text.replace
+                (regex, '');
+            this.setState({
+                qr:
+                    {
+                        ...this.state.qr,
+                        nameFlag: !this.state.qr.nameFlag,
+                        text: text
+                    }
+            })
+        }
+    };
 
     addLinkedin=(event)=> {
         event.preventDefault();
@@ -152,6 +184,11 @@ export default class HomeScreen extends Component {
     render() {
         return (
             <ScrollView contentContainerStyle={styles.contentContainer}>
+                <CheckBox
+                    title='Name'
+                    onPress={this.addName}
+                    checked={this.state.qr.nameFlag}
+                />
                 <CheckBox
                     title='Linkedin'
                     onPress={this.addLinkedin}

@@ -25,11 +25,12 @@ export const ProfileSchema = {
     primaryKey: 'id',
     properties: {
         id: 'string',
+        name: {type: 'string', indexed: true},
         profileSubmitted:{type:'string'},
         linkedin: {type: 'string', indexed: false},
         instagram: {type: 'string', indexed: false},
         facebook: {type: 'string', indexed: false},
-        emailAddress: {type: 'string', indexed: true},
+        emailAddress: {type: 'string', indexed: false},
     }
 };
 
@@ -43,7 +44,7 @@ const userDatabaseOptions = {
 const profileDatabaseOptions = {
     path: 'profileData.realm',
     schema: [ProfileSchema],
-    schemaVersion: 2,
+    schemaVersion: 3,
 };
 
 export const insertNewUser = newUserList => new Promise((resolve, reject) => {
@@ -114,6 +115,7 @@ export const editProfileInfo = info => new Promise((resolve,reject)=>{
     Realm.open(profileDatabaseOptions).then(realm=>{
         realm.write(()=>{
             let updatingInfo = realm.objectForPrimaryKey(PROFILE_SCHEMA,info.id);
+            updatingInfo.name=info.name;
             updatingInfo.emailAddress=info.emailAddress;
             updatingInfo.linkedin=info.linkedin;
             updatingInfo.instagram=info.instagram;

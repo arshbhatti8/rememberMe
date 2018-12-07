@@ -14,10 +14,11 @@ mapDispatchToProps = (dispatch) => {
 class EditProfile extends Component {
     constructor(props) {
         super(props);
-        let {linkedin, instagram, facebook, emailAddress, id} = this.props.navigation.state.params;
+        let {name,linkedin, instagram, facebook, emailAddress, id} = this.props.navigation.state.params;
         this.state = {
             info: {
                 id: id,
+                name:name,
                 linkedin: linkedin,
                 instagram: instagram,
                 facebook: facebook,
@@ -35,6 +36,12 @@ class EditProfile extends Component {
     render() {
         return (
             <ScrollView contentContainerStyle={styles.contentContainer}>
+                <FormLabel labelStyle={styles.header}>Name</FormLabel>
+                <FormInput
+                    value={this.state.info.name}
+                    onChangeText={(value) => this.setState({info: {...this.state.info, name: value}})}
+                    containerStyle={styles.formInput}
+                    inputStyle={styles.inputText}/>
                 <FormLabel labelStyle={styles.header}>Linkedin</FormLabel>
                 <FormInput
                     value={this.state.info.linkedin}

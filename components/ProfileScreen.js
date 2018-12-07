@@ -20,6 +20,7 @@ class Profile extends Component {
         this.state = {
             profile: {
                 id:uuidv4(),
+                name:"",
                 profileSubmitted:'false',
                 linkedin: "",
                 instagram: "",
@@ -47,7 +48,8 @@ class Profile extends Component {
     submitContact = (event) => {
         event.preventDefault();
         if(this.state.profile.profileSubmitted==='false'){
-            if(this.state.profile.linkedin===""&&
+            if(this.state.profile.name===""&&
+                this.state.profile.linkedin===""&&
                 this.state.profile.instagram===""&&
                 this.state.profile.facebook===""&&
                 this.state.profile.emailAddress===""){
@@ -76,6 +78,12 @@ class Profile extends Component {
     render() {
         return (
             <ScrollView contentContainerStyle={styles.contentContainer}>
+                <FormLabel labelStyle={styles.header}>Name</FormLabel>
+                <FormInput
+                    value={this.state.profile.name}
+                    onChangeText={(value) => this.setState({profile: {...this.state.profile, name: value}})}
+                    containerStyle={styles.formInput}
+                    inputStyle={styles.inputText}/>
                 <FormLabel labelStyle={styles.header}>Linkedin</FormLabel>
                 <FormInput
                     value={this.state.profile.linkedin}

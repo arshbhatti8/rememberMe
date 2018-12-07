@@ -181,7 +181,6 @@ export default class HomeScreen extends Component {
                             fgColor='white'
                         />
                     </View>
-                    <Text>State:{this.state.qr.text}</Text>
                 </View>
             </ScrollView>
         );

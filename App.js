@@ -1,19 +1,24 @@
 import React, {Component} from 'react';
 import {AppRegistry, StyleSheet, View} from 'react-native';
-import AppNavigator from './NewAppNavigator';
+import {Provider} from 'react-redux';
+import store from './store/index';
+
+import {Root,BottomTabNavigator} from './AppNavigator';
 
 export default class App extends Component {
-  render() {
-    return (
-        <View style={styles.container}>
-            <AppNavigator/>
-        </View>
-    );
-  }
+    render() {
+        return (
+            <View style={styles.container}>
+                <Provider store={store}>
+                    <Root/>
+                </Provider>
+            </View>
+        );
+    }
 }
 const styles = StyleSheet.create({
-   container:{
-       flex:1,
-   }
+    container: {
+        flex: 1,
+    }
 });
 AppRegistry.registerComponent('App', () => App);

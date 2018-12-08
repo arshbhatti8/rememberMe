@@ -1,0 +1,5 @@
+export const ADD_CONTACT = "ADD_CONTACT";
+export const EDIT_CONTACT  = "EDIT_CONTACT";
+export const DELETE_CONTACT  = "DELETE_CONTACT";
+export const ADD_PROFILE_INFO  = "ADD_PROFILE_INFO";
+export const EDIT_PROFILE_INFO  = "EDIT_PROFILE_INFO";

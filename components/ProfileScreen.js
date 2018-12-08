@@ -1,253 +1,156 @@
 import React, {Component} from 'react';
-import {
-    TextInput,
-    Text,
-    View,
-    TouchableHighlight,
-    Image,
-    Button,
-    StyleSheet,
-    AppRegistry
-    } from 'react-native';
-import Voice from 'react-native-voice';
-import Icon from 'react-native-vector-icons/MaterialIcons'
+import {ScrollView, StyleSheet} from 'react-native';
+import {Button, FormLabel, FormInput} from 'react-native-elements';
+import {connect} from 'react-redux';
+import {realmProfile} from '../database/schema';
+import uuidv4 from 'uuid4';
 
+import {addProfileInfo} from "../actions/index";
+import {queryProfile} from "../database/schema";
 
-export default class ProfileScreen extends Component {
-    constructor() {
-        super();
-        this.state = {
-            recognized: '',
-            pitch: '',
-            error: '',
-            end: '',
-            started: '',
-            results: [],
-            partialResults: [],
-            link:"http://",
-        };
-
-        Voice.onSpeechStart = this.onSpeechStart.bind(this);
-        Voice.onSpeechRecognized = this.onSpeechRecognized.bind(this);
-        Voice.onSpeechEnd = this.onSpeechEnd.bind(this);
-        Voice.onSpeechError = this.onSpeechError.bind(this);
-        Voice.onSpeechResults = this.onSpeechResults.bind(this);
-        Voice.onSpeechPartialResults = this.onSpeechPartialResults.bind(this);
-        Voice.onSpeechVolumeChanged = this.onSpeechVolumeChanged.bind(this);
+mapDispatchToProps = (dispatch) => {
+    return {
+        addProfileInfo: info => dispatch(addProfileInfo(info))
     }
+};
 
-    componentWillReceiveProps(nextProps){
-        const url= nextProps.navigation.state.params.url;
-        console.log(url);
-        this.setState({
-            ...this.state,
-            link:url
+class Profile extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            profile: {
+                id:uuidv4(),
+                name:"",
+                profileSubmitted:'false',
+                linkedin: "",
+                instagram: "",
+                facebook: "",
+                emailAddress: ""
+            }
+        };
+        this.getData();
+        realmProfile.addListener('change',()=>{
+            this.getData();
         })
     }
 
-    onSpeechStart(e) {
-        this.setState({
-            started: '√',
+    getData = () => {
+        queryProfile().then(data => {
+            const jsonData = JSON.parse(JSON.stringify(data));
+            this.setState({
+                profile: jsonData["0"]
+            })
+        }).catch((error) => {
+            alert('Error occured while getting data:' + error);
         });
-    }
+    };
 
-    onSpeechRecognized(e) {
-        this.setState({
-            recognized: '√',
-        });
-    }
+    submitContact = (event) => {
+        event.preventDefault();
+        if(this.state.profile.profileSubmitted==='false'){
+            if(this.state.profile.name===""&&
+                this.state.profile.linkedin===""&&
+                this.state.profile.instagram===""&&
+                this.state.profile.facebook===""&&
+                this.state.profile.emailAddress===""){
+                alert('Please enter some info to submit');
+            }
+            else{
+            const {profile} = this.state;
+            this.props.addProfileInfo(profile);
+            }
 
-    onSpeechEnd(e) {
-        this.setState({
-            end: '√',
-        });
-    }
-
-    onSpeechError(e) {
-        this.setState({
-            error: JSON.stringify(e.error),
-        });
-    }
-
-    onSpeechResults(e) {
-        this.setState({
-            results: e.value,
-        });
-    }
-
-    onSpeechPartialResults(e) {
-        this.setState({
-            partialResults: e.value,
-        });
-    }
-
-    onSpeechVolumeChanged(e) {
-        this.setState({
-            pitch: e.value,
-        });
-    }
-
-    async _startRecognizing(e) {
-        this.setState({
-            recognized: '',
-            pitch: '',
-            error: '',
-            started: '',
-            results: [],
-            partialResults: [],
-            end: ''
-        });
-        try {
-            await Voice.start('en-US');
-        } catch (e) {
-            console.error(e);
-        }
-    }
-
-    async _stopRecognizing(e) {
-        try {
-            await Voice.stop();
-        } catch (e) {
-            console.error(e);
-        }
-    }
-
-    async _cancelRecognizing(e) {
-        try {
-            await Voice.cancel();
-        } catch (e) {
-            console.error(e);
-        }
-    }
-
-
-    render() {
-
-        const {params} = this.props.navigation.state;
-        const name = params ? params.name: null;
-        let image;
-        if(name=='obama'){
-            image = <Image  style={styles.profileImage} source={require('../assets/images/obama.jpg')}/>
         }
         else{
-            image = <Image style={styles.profileImage} source={require('../assets/images/sanders.jpg')}/>
+            alert('If you need to edit this info, please press Edit Button');
+            return 0;
         }
+    };
+
+    navigateToEditProfile=()=>{
+        this.props.navigation.navigate('EditProfile', {...this.state.profile})
+    };
+
+    navigateToGenerateQR=()=>{
+        this.props.navigation.navigate('GenerateQR', {...this.state.profile})
+    };
+
+    render() {
         return (
-            <View style={styles.container}>
-                <View style={styles.body}>
-                    {image}
-                    <Text style={styles.link}>
-                        Link:
-                    </Text>
-                    <TextInput value={this.state.link}/>
-                    <Button
-                        title="Press to scan QR"
-                        onPress={()=>this.props.navigation.navigate('Camera')}/>
-                    <TouchableHighlight
-                        style={styles.mic}
-                        onPress={this._startRecognizing.bind(this)}>
-                        <Icon name='keyboard-voice' size={70}>
-                        </Icon>
-                    </TouchableHighlight>
-                    <Text style={styles.welcome}>
-                       Press button to start recording notes
-                    </Text>
-                    <TouchableHighlight
-                        style={styles.mic}
-                        onPress={this._stopRecognizing.bind(this)}>
-                        <Icon name='done' size={70}>
-                        </Icon>
-                    </TouchableHighlight>
-                    <Text style={styles.instructions}>
-                        Press done after you're done.
-                    </Text>
-                    <View style={styles.results}>
-                        <Text
-                            style={styles.stat}>
-                            Transcript:
-                        </Text>
-                        {this.state.partialResults.map((result, index) => {
-                            return (
-                                <Text
-                                    key={`partial-result-${index}`}
-                                    style={styles.stat}>
-                                    {result}
-                                </Text>
-                            )
-                        })}
-                    </View>
-                </View>
-            </View>
+            <ScrollView contentContainerStyle={styles.contentContainer}>
+                <FormLabel labelStyle={styles.header}>Name</FormLabel>
+                <FormInput
+                    value={this.state.profile.name}
+                    onChangeText={(value) => this.setState({profile: {...this.state.profile, name: value}})}
+                    containerStyle={styles.formInput}
+                    inputStyle={styles.inputText}/>
+                <FormLabel labelStyle={styles.header}>Linkedin</FormLabel>
+                <FormInput
+                    value={this.state.profile.linkedin}
+                    onChangeText={(value) => this.setState({profile: {...this.state.profile, linkedin: value}})}
+                    containerStyle={styles.formInput}
+                    inputStyle={styles.inputText}/>
+                <FormLabel labelStyle={styles.header}>Instagram</FormLabel>
+                <FormInput
+                    value={this.state.profile.instagram}
+                    onChangeText={(value) => this.setState({profile: {...this.state.profile, instagram: value}})}
+                    containerStyle={styles.formInput}
+                    inputStyle={styles.inputText}/>
+                <FormLabel labelStyle={styles.header}>Facebook</FormLabel>
+                <FormInput
+                    value={this.state.profile.facebook}
+                    onChangeText={(value) => this.setState({profile: {...this.state.profile, facebook: value}})}
+                    containerStyle={styles.formInput}
+                    inputStyle={styles.inputText}/>
+                <FormLabel labelStyle={styles.header}>Email Address</FormLabel>
+                <FormInput
+                    value={this.state.profile.emailAddress}
+                    onChangeText={(value) => this.setState({profile: {...this.state.profile, emailAddress: value}})}
+                    containerStyle={styles.formInput}
+                    inputStyle={styles.inputText}/>
+                <Button
+                    onPress={this.submitContact}
+                    containerViewStyle={styles.button}
+                    raised
+                    title='Submit'/>
+                <Button
+                    onPress={this.navigateToEditProfile}
+                    containerViewStyle={styles.button}
+                    raised
+                    title='Edit Profile'/>
+                <Button
+                    onPress={this.navigateToGenerateQR}
+                    containerViewStyle={styles.button}
+                    raised
+                    title='Generate QR'/>
+            </ScrollView>
         );
     }
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#F5FCFF',
-    },
-    body:{
-        height:200,
-        alignItems:'center',
-        marginTop:40,
-    },
-    link:{
-
-    },
-    mic:{
-        marginTop:20,
-    },
-    insights:{
-        backgroundColor:'#E5E5E5',
-        height:50,
-        width:250,
-        elevation:4,
-        marginTop:20,
-        justifyContent:'space-between',
-        flexDirection:'row',
-        alignItems:'center',
-    },
-    results:{
-        backgroundColor:'#E5E5E5',
-        height:50,
-        width:250,
-        elevation:4,
-        marginTop:20,
-        alignItems:'center',
-    },
-    profileImage:{
-        width:70,
-        height:100
-    },
-    stat: {
-        textAlign: 'center',
-        color: '#B0171F',
-        marginBottom: 1,
-        marginLeft:2,
-    },
     button: {
-        width: 50,
-        height: 50,
+        marginTop: 20,
     },
-    welcome: {
-        fontSize: 20,
-        textAlign: 'center',
-        margin: 10,
+    contentContainer: {
+        backgroundColor: '#36485f',
+        paddingRight:50,
+        paddingLeft:50,
+        paddingBottom: 40,
     },
-    action: {
-        textAlign: 'center',
-        color: '#0000FF',
-        marginVertical: 5,
-        fontWeight: 'bold',
+    header: {
+        fontSize: 17,
+        color: '#fff'
     },
-    instructions: {
-        textAlign: 'center',
-        color: '#333333',
-        marginBottom: 5,
+    formInput: {
+        borderBottomWidth: 1,
+        borderBottomColor: '#199187',
     },
-
-
+    inputText: {
+        color: '#fff',
+        fontSize: 16
+    },
 });
 
-AppRegistry.registerComponent('ProfileScreen', () => ProfileScreen);
+const profileScreen = connect(null,mapDispatchToProps)(Profile);
+export default profileScreen;

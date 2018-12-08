@@ -3,12 +3,13 @@ import {createBottomTabNavigator, createStackNavigator} from 'react-navigation';
 import Micon from 'react-native-vector-icons/MaterialIcons';
 import McIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import Contacts from './components/NewList';
+import Contacts from './components/ContactsList';
 import AddContact from './components/Form';
 import UserDetail from './components/UserDetail';
 import Profile from './components/ProfileScreen';
 import EditProfile from './components/EditProfile';
 import GenerateQR from './components/GenerateQR';
+import Camera from './components/CameraScreen';
 
 export const HomeStack = createStackNavigator({
     Contacts:{
@@ -19,10 +20,23 @@ export const HomeStack = createStackNavigator({
         }
     },
     UserDetail:{
-        screen:UserDetail
+        screen:UserDetail,
+        navigationOptions:{
+            title:'User Detail',
+            headerTitleStyle :{textAlign: 'center',alignSelf:'center'},
+        }
+    },
+    Camera:{
+        screen:Camera,
+        navigationOptions:{
+            title:'Point camera at QR',
+            headerTitleStyle :{textAlign: 'center',alignSelf:'center'},
+        }
     }
 
 });
+
+
 
 export const ProfileStack = createStackNavigator({
     Profile:{
@@ -55,7 +69,15 @@ export const AddContactStack = createStackNavigator({
             title:'Add Contact',
             headerTitleStyle :{textAlign: 'center',alignSelf:'center'},
         }
-    }
+    },
+    Camera:{
+        screen:Camera,
+        navigationOptions:{
+            title:'Camera',
+            headerTitleStyle :{textAlign: 'center',alignSelf:'center'},
+        }
+    },
+
 });
 
 export const BottomTabNavigator = createBottomTabNavigator({

@@ -7,7 +7,7 @@ import {CheckBox} from 'react-native-elements';
 export default class HomeScreen extends Component {
     constructor(props){
         super(props);
-        const {name,company,linkedin,instagram,facebook,emailAddress}=this.props.navigation.state.params;
+        const {name,phoneNumber,linkedin,instagram,facebook,emailAddress}=this.props.navigation.state.params;
         this.state = {
             qr:{
                 text: '',
@@ -16,11 +16,13 @@ export default class HomeScreen extends Component {
                 instagram:instagram,
                 facebook:facebook,
                 emailAddress:emailAddress,
+                phoneNumber:phoneNumber,
                 nameFlag:false,
                 linkedinFlag:false,
                 instagramFlag:false,
                 facebookFlag:false,
                 emailAddressFlag:false,
+                phoneNumberFlag:false,
             },
 
         };
@@ -181,6 +183,37 @@ export default class HomeScreen extends Component {
         }
     };
 
+    addPhoneNumber=(event)=> {
+        event.preventDefault();
+        const regex = /,\d+/g;
+        if (!this.state.qr.phoneNumberFlag) {
+            this.setState({
+                qr:
+                    {
+                        ...this.state.qr,
+                        phoneNumberFlag: !this.state.qr.phoneNumberFlag,
+                        text: `${this.state.qr.text},${this.state.qr.phoneNumber}`
+                    }
+            })
+        }
+        else {
+            let text = '';
+            this.state.qr.text===''?
+                text = this.state.qr.text.replace
+                (regex, ',') :
+                text = this.state.qr.text.replace
+                (regex, '');
+            this.setState({
+                qr:
+                    {
+                        ...this.state.qr,
+                        phoneNumberFlag: !this.state.qr.phoneNumberFlag,
+                        text: text
+                    }
+            })
+        }
+    };
+
     render() {
         return (
             <ScrollView contentContainerStyle={styles.contentContainer}>
@@ -205,9 +238,14 @@ export default class HomeScreen extends Component {
                     checked={this.state.qr.facebookFlag}
                 />
                 <CheckBox
-                    title='emailAddress'
+                    title='Email Address'
                     onPress={this.addEmail}
                     checked={this.state.qr.emailAddressFlag}
+                />
+                <CheckBox
+                    title='Phone Number'
+                    onPress={this.addPhoneNumber}
+                    checked={this.state.qr.phoneNumberFlag}
                 />
                 <View style={styles.qrContainer}>
                     <View style={styles.qr}>
@@ -219,6 +257,7 @@ export default class HomeScreen extends Component {
                         />
                     </View>
                 </View>
+                <Text>{this.state.qr.text}</Text>
             </ScrollView>
         );
     }

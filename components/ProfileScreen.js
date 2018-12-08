@@ -25,7 +25,8 @@ class Profile extends Component {
                 linkedin: "",
                 instagram: "",
                 facebook: "",
-                emailAddress: ""
+                emailAddress: "",
+                phoneNumber:""
             }
         };
         this.getData();
@@ -52,7 +53,8 @@ class Profile extends Component {
                 this.state.profile.linkedin===""&&
                 this.state.profile.instagram===""&&
                 this.state.profile.facebook===""&&
-                this.state.profile.emailAddress===""){
+                this.state.profile.emailAddress===""&&
+                this.state.profile.phoneNumber===""){
                 alert('Please enter some info to submit');
             }
             else{
@@ -106,6 +108,12 @@ class Profile extends Component {
                 <FormInput
                     value={this.state.profile.emailAddress}
                     onChangeText={(value) => this.setState({profile: {...this.state.profile, emailAddress: value}})}
+                    containerStyle={styles.formInput}
+                    inputStyle={styles.inputText}/>
+                <FormLabel labelStyle={styles.header}>Phone Number</FormLabel>
+                <FormInput
+                    value={this.state.profile.phoneNumber}
+                    onChangeText={(value) => this.setState({profile: {...this.state.profile, phoneNumber: value}})}
                     containerStyle={styles.formInput}
                     inputStyle={styles.inputText}/>
                 <Button

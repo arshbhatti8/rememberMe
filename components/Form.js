@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import {StyleSheet, ScrollView, View} from 'react-native';
-import { Button} from 'react-native-elements';
+import {StyleSheet, ScrollView} from 'react-native';
+import { Button, FormLabel, FormInput } from 'react-native-elements';
 import {connect} from 'react-redux'
 import uuidv4 from 'uuid4';
 
@@ -31,26 +31,57 @@ class RenderForm extends Component  {
         }
     }
 
+    componentWillReceiveProps(nextProps){
+        const {url} = nextProps.navigation.state.params;
+        const nameRegex = /^([A-Z])\w+\s*\w*/g;
+        const emailRegex= /\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+/g;
+        const phoneNumberRegex=/^\d+/g;
+        let user= {...this.state.user};
+        if (url !== undefined) {
+            let arr = url.split(',');
+            arr.forEach(index => {
+                if (nameRegex.exec(index) !== null || undefined) {
+                    user.name = index;
+                }
+                if (phoneNumberRegex.exec(index)) {
+                    user.phoneNumber = index;
+                }
+                if (emailRegex.exec(index)!==null||undefined) {
+                    user.emailAddress = index;
+                }
+                if (index.includes('linkedin')) {
+                    user.linkedin= index;
+                }
+                if (index.includes('instagram')) {
+                    user.instagram = index;
+                }
+                if (index.includes('facebook')) {
+                    user.facebook = index;
+                }
+            });
+        }
+        if(user.name!==""){
+            this.setState({user:user});
+            alert('Don\'t forget to press Submit button to save these details');
+        }
+        else{
+            alert('Name is a mandatory field!');
+        }
+
+    }
+
     camelize(str){
         return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(letter, index) {
             return index === 0 ? letter.toLowerCase() : letter.toUpperCase();
         }).replace(/\s+/g, '');
     }
 
-    stateChange=(text,reference)=>{
-        let stateKey = this.camelize(reference);
-        this.setState({
-            ...this.state,
-            user:{...this.state.user,
-                [stateKey]:text}
-        });
-    };
-
     submitContact = (event) => {
         event.preventDefault();
         const {user} = this.state;
-        if(this.state.user.name!==""&&this.state.user.phoneNumber!==""){
+        if(this.state.user.name!==""){
             this.props.addContact(user);
+
             this.setState({
                 user: {
                     id: uuidv4(),
@@ -64,32 +95,78 @@ class RenderForm extends Component  {
                     notes: '',
                 }
             });
-            alert('User added successfully');
         }
         else{
-            alert('Name and Phone Number are mandatory fields');
+            alert('Name is a mandatory field!');
         }
 
     };
 
+    navigateToCamera = () => {
+        this.props.navigation.navigate('Camera',{routedFrom:'AddContact'});
+    };
+
     render(){
-        const labels=['Name','Phone Number','Email Address','Company'
-            ,'Linkedin', 'Instagram', 'Facebook', 'Notes'];
         return (
             <ScrollView contentContainerStyle={styles.contentContainer}>
-                {labels.map((item,index)=>(
-                    <View key={index}>
-                        <FormItem
-                            item={item}
-                            styles={styles}
-                            handleInputChange={this.stateChange}/>
-                    </View>
-                ))}
+                <FormLabel labelStyle={styles.header}>Name</FormLabel>
+                <FormInput
+                    value={this.state.user.name}
+                    onChangeText={(value) => this.setState({user: {...this.state.user, name: value}})}
+                    containerStyle={styles.formInput}
+                    inputStyle={styles.inputText}/>
+                <FormLabel labelStyle={styles.header}>Phone Number</FormLabel>
+                <FormInput
+                    value={this.state.user.phoneNumber}
+                    onChangeText={(value) => this.setState({user: {...this.state.user, phoneNumber: value}})}
+                    containerStyle={styles.formInput}
+                    inputStyle={styles.inputText}/>
+                <FormLabel labelStyle={styles.header}>Email Address</FormLabel>
+                <FormInput
+                    value={this.state.user.emailAddress}
+                    onChangeText={(value) => this.setState({user: {...this.state.user, emailAddress: value}})}
+                    containerStyle={styles.formInput}
+                    inputStyle={styles.inputText}/>
+                <FormLabel labelStyle={styles.header}>Company</FormLabel>
+                <FormInput
+                    value={this.state.user.company}
+                    onChangeText={(value) => this.setState({user: {...this.state.user, company: value}})}
+                    containerStyle={styles.formInput}
+                    inputStyle={styles.inputText}/>
+                <FormLabel labelStyle={styles.header}>Linkedin</FormLabel>
+                <FormInput
+                    value={this.state.user.linkedin}
+                    onChangeText={(value) => this.setState({user: {...this.state.user, linkedin: value}})}
+                    containerStyle={styles.formInput}
+                    inputStyle={styles.inputText}/>
+                <FormLabel labelStyle={styles.header}>Instagram</FormLabel>
+                <FormInput
+                    value={this.state.user.instagram}
+                    onChangeText={(value) => this.setState({user: {...this.state.user, instagram: value}})}
+                    containerStyle={styles.formInput}
+                    inputStyle={styles.inputText}/>
+                <FormLabel labelStyle={styles.header}>Facebook</FormLabel>
+                <FormInput
+                    value={this.state.user.facebook}
+                    onChangeText={(value) => this.setState({user: {...this.state.user, facebook: value}})}
+                    containerStyle={styles.formInput}
+                    inputStyle={styles.inputText}/>
+                <FormLabel labelStyle={styles.header}>Notes</FormLabel>
+                <FormInput
+                    value={this.state.user.notes}
+                    onChangeText={(value) => this.setState({user: {...this.state.user, notes: value}})}
+                    containerStyle={styles.formInput}
+                    inputStyle={styles.inputText}/>
                 <Button
                     onPress={this.submitContact}
                     containerViewStyle={styles.submitButton}
                     raised
                     title='Submit'/>
+                <Button
+                    onPress={this.navigateToCamera}
+                    containerViewStyle={styles.submitButton}
+                    raised
+                    title='Scan QR'/>
             </ScrollView>
         );
     }

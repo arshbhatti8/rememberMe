@@ -14,7 +14,7 @@ mapDispatchToProps = (dispatch) => {
 class EditProfile extends Component {
     constructor(props) {
         super(props);
-        let {name,linkedin, instagram, facebook, emailAddress, id} = this.props.navigation.state.params;
+        let {name,linkedin, instagram, facebook, emailAddress, id, phoneNumber} = this.props.navigation.state.params;
         this.state = {
             info: {
                 id: id,
@@ -22,7 +22,8 @@ class EditProfile extends Component {
                 linkedin: linkedin,
                 instagram: instagram,
                 facebook: facebook,
-                emailAddress: emailAddress
+                emailAddress: emailAddress,
+                phoneNumber:phoneNumber
             }
         }
     }
@@ -64,6 +65,12 @@ class EditProfile extends Component {
                 <FormInput
                     value={this.state.info.emailAddress}
                     onChangeText={(value) => this.setState({info: {...this.state.info, emailAddress: value}})}
+                    containerStyle={styles.formInput}
+                    inputStyle={styles.inputText}/>
+                <FormLabel labelStyle={styles.header}>Phone Number</FormLabel>
+                <FormInput
+                    value={this.state.info.phoneNumber}
+                    onChangeText={(value) => this.setState({info: {...this.state.info, phoneNumber: value}})}
                     containerStyle={styles.formInput}
                     inputStyle={styles.inputText}/>
                 <Button

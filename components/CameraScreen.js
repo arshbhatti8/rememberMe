@@ -1,10 +1,5 @@
 import React, { Component } from 'react';
-
-import {
-    StyleSheet,
-    Linking,
-} from 'react-native';
-
+import {StyleSheet} from 'react-native';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 
 export default class ScanScreen extends Component {
@@ -16,17 +11,16 @@ export default class ScanScreen extends Component {
         };
     }
 
-    onSuccess(e) {
-        this.setState({
-           url:e.data
-        });
-        this.props.navigation.navigate('Profile',{url:e.data});
-    }
+    onSuccess=(e)=> {
+        console.log("Routed From:");
+        console.log(this.props.navigation.state.params);
+         this.props.navigation.state.params.routedFrom==='UserDetail' ? this.props.navigation.navigate('UserDetail',{url:e.data}) : this.props.navigation.navigate('AddContact',{url:e.data});
+    };
 
     render() {
         return (
             <QRCodeScanner
-                onRead={this.onSuccess.bind(this)}
+                onRead={this.onSuccess}
             />
         );
     }

@@ -1,145 +1,110 @@
-import React, {Component} from 'react';
-import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
-import QRCode from 'react-native-qrcode';
-import Icon from 'react-native-vector-icons/AntDesign';
-import Micon from 'react-native-vector-icons/MaterialIcons';
+import React , {Component} from 'react';
+import {Text,View, StyleSheet, FlatList, ActivityIndicator } from 'react-native';
+import {List, ListItem, SearchBar, Icon } from 'react-native-elements';
 
-
-export default class HomeScreen extends Component {
-    constructor(props){
-        super(props);
-        this.state = {
-            text: 'http://facebook.github.io/react-native/',
+export default class NewHomeScreen extends Component {
+    constructor(){
+        super();
+        this.state={
+            loading:false,
+            data:[],
+            page:1,
+            seed:1,
+            error:null,
+            refreshing:false,
         };
     }
 
-    generateLinkedin(){
-        this.setState({
-            text:'www.linkedin.com/in/arshbhatti'
-        });
+    componentWillMount(){
+        this.makeRemoteRequest();
     }
+    makeRemoteRequest = () => {
+        const {page,seed} = this.state;
+        const url = `https://randomuser.me/api/?seed=${seed}&page=${page}&results=20`;
+        this.setState({loading:true});
+        fetch(url)
+            .then(res=>res.json())
+            .then(res=>{
+                this.setState({
+                    data: page===1 ? res.results : [...this.state.data, ...res.results],
+                    error: res.error || null,
+                    loading:false,
+                    refreshing:false,
+                });
+            })
+            .catch(error=>{
+                this.setState({
+                    error,
+                    loading:false
+                });
+            });
+    };
 
-    generateEmail(){
-        this.setState({
-            text:'www.google.com/arshbhatti8'
-        });
-    }
+    renderSeparator = () => {
+        return(
+            <View
+                style={{height:1,
+                    width:'86%',
+                    backgroundColor: '#CED0CE',
+                    marginLeft:'14%'
+                }}
+            />
+        );
+    };
 
-    generateFacebook(){
-        this.setState({
-            text:'www.facebook.com/arshbhatti8'
-        });
-    }
+    renderHeader = () => {
+      return(
+          <SearchBar placeholder="Type Here..." lightTheme round/>
+      );
+    };
 
-    generateInstagram(){
-        this.setState({
-            text:'www.instagram.com/inquilabidaur   '
-        });
-    }
+    renderFooter = () => {
+        if(!this.state.loading) return null;
+        return(
+          <View style={{paddingVertical:20, borderTopWidth:1, borderTopColor:'#CED0CE'}}>
+              <ActivityIndicator animating size="large"/>
+          </View>);
+    };
+    render(){
+        return(
+                <List containerStyle={{borderTopWidth:0, borderBottomWidth:0, flex:1}}>
 
-    render() {
-        return (
-            <View style={styles.container}>
-                <View style={styles.body}>
-                   <View style={styles.navBar}>
-                       <TouchableOpacity
-                           onPress={()=>this.generateLinkedin()}>
-                           <Icon name='linkedin-square' size={30}/>
-                       </TouchableOpacity>
-                       <TouchableOpacity
-                           onPress={()=>this.generateEmail()}>
-                           <Icon name='mail' size={30}/>
-                       </TouchableOpacity>
-                       <TouchableOpacity
-                           onPress={()=>this.generateFacebook()}>
-                           <Icon name='facebook-square' size={30}/>
-                       </TouchableOpacity>
-                       <TouchableOpacity
-                           onPress={()=>this.generateInstagram()}>
-                           <Icon name='instagram' size={30}/>
-                       </TouchableOpacity>
-                   </View>
-                    <View style={styles.qrContainer}>
-                        <View  style={styles.qr}>
-                            <QRCode
-                                value={this.state.text}
-                                size={200}
-                                bgColor='black'
-                                fgColor='white'
-                            />
-                        </View>
-                        <Text>State:{this.state.text}</Text>
+                    <View style={[styles.mainContainer,styles.list]}>
+                        <FlatList
+                        data={this.state.data}
+                        renderItem={({ item })=>(
+                            <ListItem
+                                roundAvatar
+                                title={`${item.name.first} ${item.name.last}`}
+                                subtitle={item.email}
+                                avatar={{uri: item.picture.thumbnail}}
+                                containerStyle={{borderBottomWidth:0}}/>
+                        )}
+                        keyExtractor={(item)=> item.email}
+                        ItemSeparatorComponent={this.renderSeparator}
+                        ListHeaderComponent={this.renderHeader}
+                        ListFooterComponent={this.renderFooter}
+                        />
                     </View>
-                </View>
-                    <View style={styles.tabBar}>
-                        <TouchableOpacity
-                            style={styles.tabItem}
-                            onPress={()=>this.props.navigation.navigate('Profile')}>
-                            <Micon name='account-circle' size={25}/>
-                            <Text>Profile</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={styles.tabItem}
-                            onPress={()=>this.props.navigation.navigate('Contacts')}>
-                            <Micon name='person' size={25}/>
-                            <Text>Contacts</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={styles.tabItem}
-                            onPress={()=>this.props.navigation.navigate('Camera')}>
-                            <Micon name='photo-camera' size={25}/>
-                            <Text>Scan QR</Text>
-                        </TouchableOpacity>
-
-                </View>
-            </View>
+            </List>
         );
     }
 }
 
 const styles = StyleSheet.create({
-    container:{
-        flex:1
+    outerMostContainer:{
+        flex:1,
     },
-    navBar:{
-        height:50,
-        backgroundColor:'white',
-        elevation:3,
+    mainContainer:{
+        flex:1,
+    },
+    list:{
+        flex:8
+    },
+    footer:{
+        flex:1,
         flexDirection:'row',
-        justifyContent:'space-around',
-        alignItems:'center',
-
-    },
-    body:{
-        flex:1
-    },
-    qrContainer:{
-        marginTop:30,
-        height:300,
-        backgroundColor:'white',
-        elevation:10,
-        alignItems:'center',
-    },
-    qr:{
-      marginTop:30,
-    },
-    tabBar:{
-        backgroundColor:'white',
-        height:60,
-        borderColor:'#E5E5E5',
-        borderTopWidth:0.5,
-        flexDirection:'row',
-        justifyContent:'space-around',
-
-    },
-    tabItem:{
-        alignItems:'center',
-        justifyContent:'center',
-    },
-    tabTitle:{
-        fontSize:11,
-        color:'#3c3c3c',
-
+        justifyContent:'space-around'
     }
-
 });
+

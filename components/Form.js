@@ -4,7 +4,6 @@ import { Button, FormLabel, FormInput } from 'react-native-elements';
 import {connect} from 'react-redux'
 import uuidv4 from 'uuid4';
 
-import FormItem from './FormItem';
 import {addContact} from "../actions/index";
 
 const mapDispatchToProps = dispatch => {
@@ -78,10 +77,10 @@ class RenderForm extends Component  {
 
     submitContact = (event) => {
         event.preventDefault();
-        const {user} = this.state;
+        let {user} = {...this.state};
         if(this.state.user.name!==""){
             this.props.addContact(user);
-
+            user.flag = "false";
             this.setState({
                 user: {
                     id: uuidv4(),

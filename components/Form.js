@@ -3,6 +3,7 @@ import {StyleSheet, ScrollView} from 'react-native';
 import { Button, FormLabel, FormInput } from 'react-native-elements';
 import {connect} from 'react-redux'
 import uuidv4 from 'uuid4';
+import axios from 'axios';
 
 import {addContact} from "../actions/index";
 
@@ -78,9 +79,17 @@ class RenderForm extends Component  {
     submitContact = (event) => {
         event.preventDefault();
         let {user} = {...this.state};
-        if(this.state.user.name!==""){
-            this.props.addContact(user);
+        if(this.state.user.name!==""&&this.state.user.phoneNumber!==""){
             user.flag = "false";
+            user.notes===''? user.notes="notes":user.notes;
+            axios.post('https://rememberme-api-1.herokuapp.com/contacts/add', user)
+                .then((res)=>{
+                    this.props.addContact(user);
+                    alert(JSON.stringify('User added to backend'));
+                    this.props.navigation.navigate('Contacts');
+                }).catch((error)=>{
+                alert(JSON.stringify(error));
+            });
             this.setState({
                 user: {
                     id: uuidv4(),
@@ -96,7 +105,7 @@ class RenderForm extends Component  {
             });
         }
         else{
-            alert('Name is a mandatory field!');
+            alert('Name and Phone # is a mandatory field!');
         }
 
     };

@@ -10,6 +10,7 @@ import Profile from './components/ProfileScreen';
 import EditProfile from './components/EditProfile';
 import GenerateQR from './components/GenerateQR';
 import Camera from './components/CameraScreen';
+import Reminders from './components/Reminders';
 
 export const HomeStack = createStackNavigator({
     Contacts:{
@@ -117,6 +118,20 @@ export const BottomTabNavigator = createBottomTabNavigator({
             )
         }
     },
+    Reminders:{
+        screen:Reminders,
+        navigationOptions:{
+            tabBarIcon: ({tintColor}) => (
+                <McIcon
+                    name='reminder'
+                    size={24}
+                    color={tintColor}
+                />
+            )
+        }
+
+    }
+
 });
 
 export const Root = createStackNavigator({

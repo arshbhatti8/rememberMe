@@ -4,12 +4,14 @@ import {Tile, FormLabel, FormInput, Button, Text} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {connect} from 'react-redux';
 import Voice from 'react-native-voice';
+import axios from 'axios';
 
-import {editContact} from "../actions/index";
+import {editContact,deleteContact} from "../actions/index";
 
 const mapDispatchToProps = dispatch => {
     return {
-        editContact: user => dispatch(editContact(user))
+        editContact: user => dispatch(editContact(user)),
+        deleteContact: user =>dispatch(deleteContact(user))
     };
 };
 
@@ -89,11 +91,28 @@ class UserDetail extends Component {
     submitContact = (event) => {
         event.preventDefault();
         const {user} = this.state;
-        let user2 = {...user};
-        user.notes.map((note) => {
-            user2.notes = note;
-        });
-        this.props.editContact(user2);
+        if(user.notes!==undefined){
+                let state = {...this.state};
+                state.partialResults.map((note) => {
+                    user.notes = note;
+                });
+                axios.patch(`https://rememberme-api-1.herokuapp.com/contacts/${user.id}`,user)
+                .then((res)=>{
+                    this.props.editContact(user);
+                    this.props.navigation.navigate('Contacts');
+                    alert(JSON.stringify('User added to backend'));
+                }).catch((error)=>{
+                    alert(JSON.stringify(error));
+                });
+        }
+
+    };
+
+    deleteContact = (event)=>{
+        event.preventDefault();
+        const {user} = this.state;
+        this.props.deleteContact(user);
+        this.props.navigation.navigate('Contacts');
     };
 
     navigateToScanQR = () => {
@@ -133,10 +152,6 @@ class UserDetail extends Component {
     onSpeechPartialResults(e) {
         this.setState({
             partialResults: e.value,
-            user: {
-                ...this.state.user,
-                notes: e.value
-            }
         });
     }
 
@@ -215,7 +230,7 @@ class UserDetail extends Component {
                     onChangeText={(value) => this.setState({user: {...this.state.user, facebook: value}})}
                     containerStyle={styles.formInput}
                     inputStyle={styles.inputText}/>
-                <FormLabel labelStyle={styles.header}>Notes</FormLabel>
+                <FormLabel labelStyle={styles.header}>Typed Notes</FormLabel>
                 <FormInput
                     value={this.state.user.notes}
                     onChangeText={(value) => this.setState({user: {...this.state.user, notes: value}})}
@@ -248,7 +263,8 @@ class UserDetail extends Component {
                             })}
                             </View>
                 </View>
-                <View style={styles.buttonContainer}><Button
+                <View style={styles.buttonContainer}>
+                    <Button
                     onPress={this.submitContact}
                     containerViewStyle={styles.submitButton}
                     raised
@@ -258,6 +274,11 @@ class UserDetail extends Component {
                         containerViewStyle={styles.submitButton}
                         raised
                         title='Scan QR'/>
+                    <Button
+                        onPress={this.deleteContact}
+                        containerViewStyle={styles.submitButton}
+                        raised
+                        title='Delete Contact'/>
                 </View>
             </ScrollView>
         )

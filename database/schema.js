@@ -128,6 +128,5 @@ export const editProfileInfo = info => new Promise((resolve,reject)=>{
 });
 
 
-
 export const realmUser= new Realm(userDatabaseOptions);
 export const realmProfile= new Realm(profileDatabaseOptions);

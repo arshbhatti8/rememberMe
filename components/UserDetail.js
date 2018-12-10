@@ -111,8 +111,14 @@ class UserDetail extends Component {
     deleteContact = (event)=>{
         event.preventDefault();
         const {user} = this.state;
-        this.props.deleteContact(user);
-        this.props.navigation.navigate('Contacts');
+        axios.patch(`https://rememberme-api-1.herokuapp.com/contacts/delete/${user.id}`,user)
+            .then((res)=>{
+                this.props.deleteContact(user);
+                alert('User deleted');
+                this.props.navigation.navigate('Contacts');
+            }).catch((error)=>{
+            alert(JSON.stringify(error));
+        });
     };
 
     navigateToScanQR = () => {

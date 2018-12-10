@@ -1,6 +1,9 @@
 import React, {Component} from 'react';
-import {Text, View, ActivityIndicator, StyleSheet, ScrollView} from 'react-native';
+import {Text, View, ActivityIndicator, StyleSheet, ScrollView, Linking} from 'react-native';
+import {Button} from 'react-native-elements';
 import axios from 'axios';
+import RNCalendarEvents from 'react-native-calendar-events'
+
 
 class Reminders extends Component {
     constructor() {
@@ -12,8 +15,8 @@ class Reminders extends Component {
 
     componentDidMount() {
         axios.get('https://rememberme-api-1.herokuapp.com/contacts').then((res) => {
-            let users = [];
             console.log(res.data);
+            let users = [];
             if (res.data !== undefined) {
                 res.data.map((user) => {
                     if (user.keywords) {
@@ -25,7 +28,34 @@ class Reminders extends Component {
         }).catch((error) => {
             console.log(error);
         });
+        RNCalendarEvents.authorizeEventStore()
+            .then((out) => {
+                if(out === 'authorized') {
+                    // set the new status to the auth state
+                    this.setState({ cal_auth: out })
+                }
+            })
+            .catch(error => console.warn('Auth Error: ', error));
     }
+
+    addToCalendar=(user)=>{
+        const {keywords}=user;
+        const startDate= '2018-12-11T17:26:00.000Z';
+        const endDate= '2018-12-11T19:26:00.000Z';
+        RNCalendarEvents.saveEvent(`${user.notes}`, {
+            location:'Our Awesome Place City, State',
+            notes: `Event with :${user.name}, contact them at ${user.phoneNumber}`,
+            startDate:startDate,
+            endDate:endDate,
+            calendar: ['Calendar'],
+            alarm: [{
+                date:-1
+            }],
+        })
+            .then(id => {
+                alert('Event added to Calendar!');
+            }).catch(error => console.log('Save Event Error: ',error));
+    };
 
     renderRow = (user) => {
         return (
@@ -35,6 +65,13 @@ class Reminders extends Component {
                 </View>
                 <View style={styles.row}>
                     <Text style={styles.rowText}>{user.notes}</Text>
+                </View>
+                <View style={styles.row}>
+                    <Button
+                    onPress={()=>this.addToCalendar(user)}
+                    containerViewStyle={styles.button}
+                    raised
+                    title='Add to Calendar'/>
                 </View>
             </View>
         );
@@ -63,6 +100,8 @@ class Reminders extends Component {
                     <View style={{flex: 2}}>
                         <Text style={styles.headings}>Reminders</Text>
                     </View>
+                    <View style={{flex: 2}}>
+                    </View>
                 </View>
                 {this.state.users.map((user, index) => {
                     return (
@@ -85,7 +124,6 @@ const styles = StyleSheet.create({
         height: 80
     },
     headings: {
-        textAlign: 'center',
         fontWeight:'bold',
         fontSize:17,
         color:'#fff',
@@ -95,13 +133,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         paddingRight:20,
-        paddingLeft:20
     },
     row: {
         flex: 1,
         alignSelf: 'stretch',
-        borderRadius:5,
-        borderColor:'#fff',
+        paddingTop:5,
     },
     rowText:{
         color:'#fff',
@@ -111,4 +147,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default Reminders
+export default Reminders;

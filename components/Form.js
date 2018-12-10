@@ -85,23 +85,23 @@ class RenderForm extends Component  {
             axios.post('https://rememberme-api-1.herokuapp.com/contacts/add', user)
                 .then((res)=>{
                     this.props.addContact(user);
+                    this.setState({
+                        user: {
+                            id: uuidv4(),
+                            name: '',
+                            phoneNumber: '',
+                            emailAddress: '',
+                            company: '',
+                            linkedin: '',
+                            instagram: '',
+                            facebook: '',
+                            notes: '',
+                        }
+                    });
                     alert(JSON.stringify('User added to backend'));
                     this.props.navigation.navigate('Contacts');
                 }).catch((error)=>{
                 alert(JSON.stringify(error));
-            });
-            this.setState({
-                user: {
-                    id: uuidv4(),
-                    name: '',
-                    phoneNumber: '',
-                    emailAddress: '',
-                    company: '',
-                    linkedin: '',
-                    instagram: '',
-                    facebook: '',
-                    notes: '',
-                }
             });
         }
         else{

@@ -35,7 +35,7 @@ const rootReducer = (state, action) => {
         ADD_PROFILE_INFO:
             action.payload.profileSubmitted= 'true';
             insertNewProfileInfo(action.payload).then(()=>
-                {alert('Info added successfully')}
+                {alert('Info added to db successfully')}
             ).catch((error)=>{
                 alert(`Error occured while adding: ${error}`);
             });

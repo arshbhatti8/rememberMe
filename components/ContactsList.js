@@ -9,7 +9,7 @@ class NewList extends Component {
     constructor() {
         super();
         this.state = {
-            users: []
+            users: null
         };
         this.getData();
         realmUser.addListener('change',()=>{
@@ -63,6 +63,13 @@ class NewList extends Component {
     };
 
     render() {
+        if(!this.state.users){
+            return <ActivityIndicator
+                animating={true}
+                style={styles.indicator}
+                size="large"
+            />
+        }
         return (
             <View style={styles.mainContainer}>
                 <View style={[styles.mainContainer, styles.list]}>
@@ -103,6 +110,12 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         justifyContent: 'space-around'
+    },
+    indicator: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: 80
     }
 });
 
